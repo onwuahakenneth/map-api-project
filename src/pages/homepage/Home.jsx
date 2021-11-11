@@ -2,11 +2,12 @@ import React, {useState, useEffect, useCallback} from 'react'
 import ReactMapGl, {Marker, Popup} from 'react-map-gl'
 import markerIcon from '../../logo/marker-icon.png'
 import Form from './Form'
-// import 'mapbox-gl/dist/mapbox-gl.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './home.css'
 const Home = () => {
 
     const [waypoints, setWaypoints] = useState([['6.05', '7.18']])
+    const [info, setInfo] = useState({})
     const [currentToken, setCurrentToken] = useState(null)
     const [origin, setOrigin] = useState('')
     const [destination, setDestination] = useState('')
@@ -26,7 +27,7 @@ const Home = () => {
         .then(async response => {
             const isJson = response.headers.get('Content-Type')?.includes('application/json');
             const data = isJson && await response.json();
-            //check for erroe response
+            //check for error response
             if(!response.ok){
                 const error = (data && data.message) || response.status;
                 return Promise.reject(error)
@@ -34,7 +35,7 @@ const Home = () => {
             setCurrentToken(data);
         })
         .catch(error =>{
-            alert(`Error while trying to get data. Error ${error}`)
+           setInfo({error: error})
         })
     }, [origin, destination])
 
@@ -55,6 +56,7 @@ const Home = () => {
                 if(data.status === 'success'){
                     console.log(data)
                     setWaypoints(data.path)
+                    setInfo({...data})
                 }
             })
         }
@@ -76,6 +78,19 @@ const Home = () => {
 
     return (
         <div className='home'>
+
+            {   
+                info.status === 'success' &&
+                <div>
+                <p>Distance: {info['total_distance']}</p>
+                <p>Time: {info['total_time']}</p>
+            </div>
+            }
+            
+            {
+                 info.status === 'failue' &&
+                 <p>{info.error}</p>
+            }
             <Form 
             setOrigin={setOrigin} 
             setDestination={setDestination}
