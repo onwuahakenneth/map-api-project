@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback} from 'react'
 import ReactMapGl, {Marker, Popup} from 'react-map-gl'
 import markerIcon from '../../logo/marker-icon.png'
 import Form from './Form'
+// import 'mapbox-gl/dist/mapbox-gl.css';
 import './home.css'
 const Home = () => {
 
@@ -37,6 +38,7 @@ const Home = () => {
         })
     }, [origin, destination])
 
+
     useEffect(()=>{
       if(search){
           getToken()
@@ -51,6 +53,7 @@ const Home = () => {
                 .then(data => {
                     
                 if(data.status === 'success'){
+                    console.log(data)
                     setWaypoints(data.path)
                 }
             })
