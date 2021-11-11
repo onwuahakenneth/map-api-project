@@ -1,0 +1,34 @@
+.home {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mapContainer {
+    padding: 0.3rem;
+    flex:1 1 100px ;
+}
+.marker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    align-items: center;
+}
+
+.marker span {
+    font-weight: 800;
+    padding: 0rem 0.4rem;
+    background: #fff;
+    border-radius: 0.6rem;
+    color: #000;
+}
+
+@media screen and (max-width: 590px) {
+    .home {
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+    }
+    
+   
+}

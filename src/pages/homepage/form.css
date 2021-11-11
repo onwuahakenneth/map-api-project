@@ -1,0 +1,96 @@
+
+.form-container {
+    margin: 0.5rem;
+}
+
+
+
+.form-div {
+    position: relative;
+    height: 4rem;
+    width: 18rem;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+}
+
+.input {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    padding-top: 2.4rem;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #888;
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.label-box {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-bottom: 1px solid #777;
+    pointer-events: none;
+}
+
+.label-box::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-bottom: 3px solid rgb(4, 4, 119);
+    bottom: -2px;
+    left: 0px;
+    transform: translateX(-100%);
+    transition: all 0.4s linear;
+}
+
+.label-text {
+    position: absolute;
+    font-size: 1rem;
+    top: 2.7rem;
+    color: #888;
+    transition: all 0.4s linear;
+}
+
+.input:focus, .input:valid {
+    color: #111;
+}
+
+.input:focus + .label-box::after,.input:valid + .label-box::after {
+    transform: translateX(0%);
+}
+
+.input:focus + .label-box .label-text, .input:valid + .label-box .label-text {
+    color: #bbb;
+    top: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.search-box button {
+    margin-top: 0.8rem;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.4rem 0.6rem;
+    background: #111;
+    color: #bbb;
+    border-radius: 0.3rem;
+    box-shadow: 0px 3px 5px 3px #999;
+    transition: all 0.3s linear;
+}
+
+.search-box button:hover {
+    color: #eee;
+}

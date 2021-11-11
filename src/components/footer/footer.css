@@ -1,0 +1,19 @@
+.footer {
+    position: fixed;
+    bottom: 0rem;
+    left: 0rem;
+    right: 0rem;
+    height: 4vh;
+    background: var(--main-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 55;
+}
+
+
+.footer div {
+    text-align: center;
+    font-size: 11px;
+    color: var(--dull-white);
+}
