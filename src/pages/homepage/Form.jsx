@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './form.css'
 import {FaSearch} from 'react-icons/fa'
 
@@ -6,11 +6,20 @@ import {FaSearch} from 'react-icons/fa'
 //Handle Submit
 
 
-const Form = ({setOrigin, setDestination, origin, destination,setSearch}) => {
+const Form = ({setIsLoading,setSearchPoints}) => {
     
+    const [origin, setOrigin] = useState('');
+    const [destination, setDestination] = useState('');
+
     const handleSubmit = (e)=>{
         if(origin.trim() && destination.trim()){
-            setSearch(prev => true)
+            setSearchPoints({
+                origin: origin,
+                destination: destination
+            })
+            setIsLoading(true)
+            setOrigin('');
+            setDestination('');
         }
     
     }
