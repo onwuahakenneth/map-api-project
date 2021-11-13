@@ -7,7 +7,8 @@ import './home.css'
 const Home = () => {
     
     const [errors, setErrors] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isFetching, setIsFetching] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [token, setToken] = useState(null);
     const [lat, setLat] = useState('9.0765');
     const [lng, setLng] = useState('7.3986');
@@ -52,6 +53,7 @@ const Home = () => {
             if(!res.ok){
                 //call fetch again to get token.
                 getToken();
+                setLoading(false)
                 throw Error('Could not fetch from the resource, please reload the page or check your network connection.')
             }
             return res.json();
@@ -59,17 +61,23 @@ const Home = () => {
         .then(data => {
             setToken(data.token)
             setErrors(null)
-            setIsLoading(false)
+            setIsFetching(false)
+
         })
-        .catch(err => setErrors(err.message))
+        .catch(err => {
+            setErrors(err.message);
+            setLoading(false)
+        })
         
         }
         //call function only on ssearch button click
 
-        if(isLoading){
-            getToken() 
+        if(isFetching){
+            setErrors(null)
+            setTimeout(getToken, 1500)
+            setLoading(true)
         }
-    }, [url, searchPoints.origin, searchPoints.destination, isLoading])
+    }, [url, searchPoints.origin, searchPoints.destination, isFetching])
     
 
     useEffect(()=>{
@@ -95,6 +103,7 @@ const Home = () => {
                         setViewport({...viewport, latitude: Number(data.path[0][0]), longitude: Number(data.path[0][1])})
                     }
                     setRouteData(data)
+                    setLoading(false)
                 })
             }
             
@@ -110,9 +119,15 @@ const Home = () => {
 
    return (
        <div className='home'>
+           <div className='fetch-container'>
 
+            {
+                loading &&
+                <p className='loading-icon'></p>
+                }
            <p>{errors}</p>
-           <Form  setIsLoading={setIsLoading} setSearchPoints={setSearchPoints}/>
+           <Form  setIsFetching={setIsFetching} setSearchPoints={setSearchPoints}/>
+            </div>
 
             <ReactMapGl 
             {...viewport} 

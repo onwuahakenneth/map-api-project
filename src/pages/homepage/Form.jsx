@@ -6,7 +6,7 @@ import {FaSearch} from 'react-icons/fa'
 //Handle Submit
 
 
-const Form = ({setIsLoading,setSearchPoints}) => {
+const Form = ({setIsFetching,setSearchPoints}) => {
     
     const [origin, setOrigin] = useState('');
     const [destination, setDestination] = useState('');
@@ -17,7 +17,7 @@ const Form = ({setIsLoading,setSearchPoints}) => {
                 origin: origin,
                 destination: destination
             })
-            setIsLoading(true)
+            setIsFetching(true)
             setOrigin('');
             setDestination('');
         }
