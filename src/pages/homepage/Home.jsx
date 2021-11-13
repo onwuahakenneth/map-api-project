@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react'
-import ReactMapGl, {Marker} from 'react-map-gl'
+import ReactMapGl, {Marker, Popup} from '!react-map-gl' // eslint-disable-line import/no-webpack-loader-syntax
 import markerIcon from '../../logo/marker-icon.png'
 import Form from './Form'
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -7,6 +7,7 @@ import './home.css'
 const Home = () => {
     
     const [errors, setErrors] = useState(null);
+    const [showInfo, setShowInfo] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState(null);
@@ -31,6 +32,9 @@ const Home = () => {
     const url = useMemo(()=>{
         return 'https://mock-api.dev.lalamove.com/route'
     }, [])
+
+
+   
 
     useEffect(()=>{
 
@@ -74,37 +78,50 @@ const Home = () => {
 
         if(isFetching){
             setErrors(null)
+            setRouteData({path: [['9.0765', '7.3986']]})
             setTimeout(getToken, 1500)
             setLoading(true)
         }
-    }, [url, searchPoints.origin, searchPoints.destination, isFetching])
+    }, [url, searchPoints.origin, searchPoints.destination, isFetching, lat, lng])
     
 
     useEffect(()=>{
         if(token){
+        let retiries = 0;            
 
             const getRouteData = ()=>{
                 fetch(`${url}/${token}`)
                 .then(response => {
-                    if(!response.ok){
+                    if(!response.ok && retiries <= 3){
                         getRouteData()
+                        retiries++;
+                        if(retiries > 3){
+                            throw Error('Unable to get data from the resouce. Try again...')
+                        }
+                        return
                     }
 
                     return response.json();
                 })
                 .then(data => {
                     //call getRouteDta again untill we have a success or failure
-                    if(data.status === 'in progress'){
+                    if(data && data.status === 'in progress'){
                         getRouteData();
+                    }else{
+                        setToken(null)
+                        if(data?.path && data?.path?.length > 0){
+                            setLat(data.path[0][0])
+                            setLng(data.path[0][1])
+                            setViewport({...viewport, latitude: Number(data.path[0][0]), longitude: Number(data.path[0][1])})
+                        }
+
+                        setRouteData(data)
+                        setLoading(false)
                     }
-                    if(data.status === 'success'){
-                        setLat(data.path[0][0])
-                        setLng(data.path[0][1])
-                        setViewport({...viewport, latitude: Number(data.path[0][0]), longitude: Number(data.path[0][1])})
-                    }
-                    setRouteData(data)
-                    setLoading(false)
+                    
+                   
                 })
+               
             }
             
             getRouteData();
@@ -125,8 +142,23 @@ const Home = () => {
                 loading &&
                 <p className='loading-icon'></p>
                 }
-           <p>{errors}</p>
-           <Form  setIsFetching={setIsFetching} setSearchPoints={setSearchPoints}/>
+           <p className='error'>{errors}</p>
+
+           {
+                (routeData && routeData.total_time) &&
+                <>
+                <p>Distance: {routeData.total_distance}</p>
+                <p>Time: {routeData.total_time}</p>
+                </> 
+                
+            }
+            {
+                (routeData && routeData.error) &&
+                <p>{routeData.error}</p>
+            }
+
+           <Form  setIsFetching={setIsFetching} setSearchPoints={setSearchPoints} isFetching={isFetching}/>
+            
             </div>
 
             <ReactMapGl 
@@ -149,9 +181,7 @@ const Home = () => {
                     </Marker>
       
         ))
-
     }
-
             </ReactMapGl>
 
        </div>
