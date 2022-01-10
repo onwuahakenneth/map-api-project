@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useMemo} from 'react'
-import ReactMapGl, {Marker, Popup} from '!react-map-gl' // eslint-disable-line import/no-webpack-loader-syntax
+import ReactMapGl, {Marker} from '!react-map-gl' // eslint-disable-line import/no-webpack-loader-syntax
 import markerIcon from '../../logo/marker-icon.png'
 import Form from './Form'
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -7,21 +7,17 @@ import './home.css'
 const Home = () => {
     
     const [errors, setErrors] = useState(null);
-    const [showInfo, setShowInfo] = useState(true);
     const [isFetching, setIsFetching] = useState(false);
     const [loading, setLoading] = useState(false);
     const [token, setToken] = useState(null);
     const [lat, setLat] = useState('9.0765');
     const [lng, setLng] = useState('7.3986');
     const [routeData, setRouteData] = useState({path: [[lat, lng]]});
-
-
     const [searchPoints, setSearchPoints] = useState({
         origin: 'Imo',
         destination: 'Abuja'
     });
     
-
     const [viewport, setViewport] = useState({
         latitude: Number(lat),
         longitude: Number(lng),
@@ -29,12 +25,12 @@ const Home = () => {
         width: '100vw',
         height: '55vh'
      });
+
+
     const url = useMemo(()=>{
         return 'https://mock-api.dev.lalamove.com/route'
     }, [])
 
-
-   
 
     useEffect(()=>{
 
@@ -53,7 +49,6 @@ const Home = () => {
             })
         })
         .then(res => {
-    
             if(!res.ok){
                 //call fetch again to get token.
                 getToken();
@@ -66,7 +61,7 @@ const Home = () => {
             setToken(data.token)
             setErrors(null)
             setIsFetching(false)
-
+            
         })
         .catch(err => {
             setErrors(err.message);
@@ -173,9 +168,10 @@ const Home = () => {
                         <div className='marker'>
                         <span>{index + 1}</span>
                         <img 
-                        src={markerIcon} alt='marker icon'
-                        height={viewport.zoom*3}
-                        width={viewport.zoom*3} />
+                            src={markerIcon} alt='marker icon'
+                            height={viewport.zoom*3}
+                            width={viewport.zoom*3} 
+                        />
                         </div>
 
                     </Marker>
